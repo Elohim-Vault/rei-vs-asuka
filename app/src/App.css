@@ -1,0 +1,42 @@
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  padding: 5px 15px 0 0;
+}
+
+.body {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title {
+  position: relative;
+  margin: 0 auto;
+  max-width: 600px;
+}
+
+.pool {
+  display: flex;
+  flex-direction: row;
+}
+
+.girl {
+  display: flex;
+  max-width: 250px;
+  flex-direction: column;
+  margin-right: 80px;
+  margin-left: 80px;
+}
+
+.girl img {
+  margin-bottom: 10px;
+}
+
+.girl h4 {
+  margin: 0 0 0 0;
+  font-size: 50px;
+}
