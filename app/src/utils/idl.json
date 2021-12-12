@@ -1,0 +1,70 @@
+{
+  "version": "0.0.0",
+  "name": "rei_vs_asuka",
+  "instructions": [
+    {
+      "name": "initialize",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "user",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "voteRei",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "voteAsuka",
+      "accounts": [
+        {
+          "name": "voteAccount",
+          "isMut": true,
+          "isSigner": false
+        }
+      ],
+      "args": []
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Voting",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "reiVotes",
+            "type": "u64"
+          },
+          {
+            "name": "asukaVotes",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ],
+  "metadata": {
+    "address": "9Je2oLNDKnQNdVg8XmiTQ6DoVdTmHnykrrb6opLoDYns"
+  }
+}

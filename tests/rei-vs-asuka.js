@@ -1,56 +1,63 @@
-const anchor = require('@project-serum/anchor');
-const { SystemProgram } = require('@solana/web3.js');
-const { assert } = require('chai');
+const assert = require("assert");
+const anchor = require("@project-serum/anchor");
 
-describe('rei-vs-asuka', () => {
+describe("rei-vs-asuka", () => {
+  // Configure the client
+  const provider = anchor.Provider.env();
+  anchor.setProvider(provider);
 
-  // Configure the client to use the local cluster.
-  anchor.setProvider(anchor.Provider.env());
-  const provider = anchor.Provider.env(); 
-  const voteAccount = anchor.web3.Keypair.generate(); 
-  it('Is initialized!', async () => {
-    // Add your test here.
-    const program = anchor.workspace.ReiVsAsuka;
-    const tx = await program.rpc.initialize({
+  const program = anchor.workspace.ReiVsAsuka;
+
+  let voteAccount, voteAccountBump;
+  before(async () => {
+    [voteAccount, voteAccountBump] =
+      await anchor.web3.PublicKey.findProgramAddress(
+        [Buffer.from("vote_account")],
+        program.programId
+      );
+  });
+
+  it("Initializes with 0 votes for crunchy and smooth", async () => {
+    await program.rpc.initialize(new anchor.BN(voteAccountBump), {
       accounts: {
-        voteAccount: voteAccount.publicKey,
         user: provider.wallet.publicKey,
-        systemProgram: SystemProgram.programId,
+        voteAccount: voteAccount,
+        systemProgram: anchor.web3.SystemProgram.programId,
       },
-      signers: [voteAccount]
     });
-    console.log("Your transaction signature", tx);
 
+    let currentVoteAccountState = await program.account.votingState.fetch(
+      voteAccount
+    );
+    assert.equal(0, currentVoteAccountState.reiVotes.toNumber());
+    assert.equal(0, currentVoteAccountState.asukaVotes.toNumber());
   });
 
-  it("Fetch votes", async () => {
-    const program = anchor.workspace.ReiVsAsuka;
-    let result = await program.account.voting.fetch(voteAccount.publicKey);
-    assert("0", result.reiVotes);
-    assert("0", result.asukaVotes);
-  });
-
-  it("Voting in Rei", async () => {
-    const program = anchor.workspace.ReiVsAsuka;
+  it("Votes correctly for Rei", async () => {
     await program.rpc.voteRei({
       accounts: {
-        voteAccount: voteAccount.publicKey,
-      }
+        voteAccount: voteAccount,
+      },
     });
 
-    let result = await program.account.voting.fetch(voteAccount.publicKey);
-    assert("1", result.reiVotes);
+    let currentVoteAccountState = await program.account.votingState.fetch(
+      voteAccount
+    );
+    assert.equal(3, currentVoteAccountState.reiVotes.toNumber());
+    assert.equal(2, currentVoteAccountState.asukaVotes.toNumber());
   });
 
-  it("Voting in Rei", async () => {
-    const program = anchor.workspace.ReiVsAsuka;
+  it("Votes correctly for Asuka", async () => {
     await program.rpc.voteAsuka({
       accounts: {
-        voteAccount: voteAccount.publicKey,
-      }
+        voteAccount: voteAccount,
+      },
     });
 
-    let result = await program.account.voting.fetch(voteAccount.publicKey);
-    assert("1", result.asukaVotes);
+    let currentVoteAccountState = await program.account.votingState.fetch(
+      voteAccount
+    );
+    assert.equal(3, currentVoteAccountState.reiVotes.toNumber());
+    assert.equal(3, currentVoteAccountState.asukaVotes.toNumber());
   });
 });
