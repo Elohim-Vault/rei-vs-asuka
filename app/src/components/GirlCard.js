@@ -4,7 +4,7 @@ import { Connection } from "@solana/web3.js";
 import { network, preflightCommitment, programID } from "../utils/config";
 import idl from "../utils/idl.json";
 import { web3 } from "@project-serum/anchor";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function GirlCard({img, girlName}) {
     const [asukaVotes, setAsukaVotes] = useState(0);
@@ -17,7 +17,7 @@ export default function GirlCard({img, girlName}) {
       const provider = new Provider(connection, wallet, preflightCommitment);
       const program = new Program(idl, programID, provider);
 
-      let [voteAccount, voteAccountBump] =
+      let voteAccount =
       await web3.PublicKey.findProgramAddress(
         [Buffer.from("vote_account")],
         programID
@@ -36,14 +36,14 @@ export default function GirlCard({img, girlName}) {
 
     useEffect(() => {
       getVotes()
-    }, []);
+    }, );
 
     return (
         <div className='girl'>
           <h3>Team {girlName}</h3>
           <img src={img} />
           <button>Vote</button>
-          <h4>{girlName == "Rei Ayanami" ? reiVotes : asukaVotes}</h4>
+          <h4>{girlName === "Rei Ayanami" ? reiVotes : asukaVotes}</h4>
         </div>
     )
 }
