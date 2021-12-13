@@ -11,9 +11,9 @@ function App() {
       </div>
       <div className='body'>
         <div className='title'>
-          <h1>Rei ou Asuka?</h1>
+          <h1>Rei or Asuka?</h1>
           <p>
-            It's time to settle an age old debate: What is the best kind of peanut butter?
+            It's time to settle an age old debate: Who is the best evangelion girl?
             Cast your vote to the Solana blockchain and help decide this once and for all!
           </p>
           <p>To get started, connect your wallet.</p>
