@@ -11,8 +11,8 @@ export default function GirlCard({img, girlName}) {
     const [reiVotes, setReiVotes] = useState(0);
 
 
+    const wallet = useWallet();
     async function getVotes() {
-      const wallet = useWallet();
       const connection = new Connection(network, preflightCommitment);
       const provider = new Provider(connection, wallet, preflightCommitment);
       const program = new Program(idl, programID, provider);
@@ -37,7 +37,7 @@ export default function GirlCard({img, girlName}) {
     useEffect(() => {
       getVotes()
     }, []);
-    
+
     return (
         <div className='girl'>
           <h3>Team {girlName}</h3>
