@@ -1,30 +1,46 @@
 import { Program, Provider } from "@project-serum/anchor";
 import { useWallet } from "@solana/wallet-adapter-react"
-import { Connection, VoteAccount } from "@solana/web3.js";
+import { Connection } from "@solana/web3.js";
 import { network, preflightCommitment, programID } from "../utils/config";
 import idl from "../utils/idl.json";
+import { web3 } from "@project-serum/anchor";
+import { useState } from "react";
 
 export default function GirlCard({img, girlName}) {
-    const wallet = useWallet();
-    console.log(wallet);
+    const [asukaVotes, setAsukaVotes] = useState(0);
+    const [reiVotes, setReiVotes] = useState(0);
 
+    const wallet = useWallet();
     async function getVotes() {
       const connection = new Connection(network, preflightCommitment);
       const provider = new Provider(connection, wallet, preflightCommitment);
       const program = new Program(idl, programID, provider);
+
+      let [voteAccount, voteAccountBump] =
+      await web3.PublicKey.findProgramAddress(
+        [Buffer.from("vote_account")],
+        programID
+      );
+
       try {
-        const account = await program.account.voting.fetch(VoteAccount.publicKey);
-        console.log(account)
+        let currentVoteAccountState = await program.account.votingState.fetch(
+          voteAccount
+        );
+        
+        setReiVotes(currentVoteAccountState.reiVotes.toNumber());
+        setAsukaVotes(currentVoteAccountState.asukaVotes.toNumber() );
       } catch(err) {
         console.error(err);
       }
     }
+
+    getVotes();
     return (
         <div className='girl'>
-        <h3>Team {girlName}</h3>
-        <img src={img} />
-        <button>Vote</button>
-        <h4>5555</h4>
-      </div>
+          <h3>Team {girlName}</h3>
+          <img src={img} />
+          <button>Vote</button>
+          <h4>{girlName == "Rei Ayanami" ? reiVotes : asukaVotes}</h4>
+        </div>
     )
 }

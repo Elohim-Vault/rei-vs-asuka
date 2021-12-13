@@ -8,11 +8,11 @@
         {
           "name": "voteAccount",
           "isMut": true,
-          "isSigner": true
+          "isSigner": false
         },
         {
           "name": "user",
-          "isMut": true,
+          "isMut": false,
           "isSigner": true
         },
         {
@@ -21,7 +21,12 @@
           "isSigner": false
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "voteAccountBump",
+          "type": "u8"
+        }
+      ]
     },
     {
       "name": "voteRei",
@@ -48,7 +53,7 @@
   ],
   "accounts": [
     {
-      "name": "Voting",
+      "name": "VotingState",
       "type": {
         "kind": "struct",
         "fields": [
@@ -59,6 +64,10 @@
           {
             "name": "asukaVotes",
             "type": "u64"
+          },
+          {
+            "name": "bump",
+            "type": "u8"
           }
         ]
       }
